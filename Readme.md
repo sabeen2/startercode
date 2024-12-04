@@ -57,7 +57,7 @@ An tool for creating database diagrams using **Next.js**, **Tailwind CSS**, **Re
 ### Core Features
 
 - **Diagram Creation**:
-  - Add, edit, and delete table.
+  - Add, edit, and delete tables.
   - Manage columns with data types and constraints.
   - Create, edit, and delete relationships.
 - **Data Persistence**:
