@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState, ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Save, Upload, Undo, Redo, Menu, Download } from "lucide-react";
 import ModeToggle from "./ModeToggle";
 import { useDiagram } from "../../providers/DiagramContext";
@@ -19,118 +26,115 @@ type ToolbarProps = {
 };
 
 const Toolbar = ({ toggleSidebar }: ToolbarProps) => {
-  const {
-    saveDiagram,
-    loadDiagram,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-    tables,
-    relationships,
-  } = useDiagram();
+  const { loadDiagram, undo, redo, canUndo, canRedo, tables, relationships } =
+    useDiagram();
 
-  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // Check file size (optional, adjust as needed)
-      const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-      if (file.size > MAX_FILE_SIZE) {
-        toast({
-          title: "Failed",
-          description: "File is too large. Maximum size is 5MB.",
-          variant: "destructive",
-        });
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-        return;
-      }
-
-      // Check file type
-      if (
-        file.type !== "application/json" &&
-        !file.name.toLowerCase().endsWith(".json")
-      ) {
-        toast({
-          title: "Failed",
-          description: "Please upload a valid JSON file.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result;
-        if (typeof content === "string") {
-          try {
-            const data = JSON.parse(content);
-
-            // Validate the structure of the imported data
-            if (!isValidDiagramData(data)) {
-              toast({
-                title: "Failed",
-                description: "Invalid diagram data structure",
-                variant: "destructive",
-              });
-              return;
-            }
-
-            // If validation passes, load the diagram
-            loadDiagram(data);
-
-            toast({
-              title: "Success",
-              description: "Diagram imported successfully!",
-            });
-          } catch (error) {
-            console.error("Error parsing JSON:", error);
-            toast({
-              title: "Failed",
-              description:
-                "Failed to parse JSON file. Please check the file format.",
-              variant: "destructive",
-            });
-          }
-        }
-      };
-
-      reader.onerror = () => {
-        toast({
-          title: "Failed",
-          description: "Error reading file. Please try again..",
-          variant: "destructive",
-        });
-      };
-
-      reader.readAsText(file);
-    }
-  };
-
-  // Validation function to check the imported data structure
   const isValidDiagramData = (data: any): boolean => {
-    // Check if data has required properties
-    if (!data || typeof data !== "object") return false;
+    if (!data || typeof data !== "object") {
+      toast({
+        title: "Invalid File",
+        description: "The uploaded file is not a valid JSON object.",
+        variant: "destructive",
+      });
+      return false;
+    }
 
     // Validate tables array
-    if (!Array.isArray(data.tables)) return false;
+    if (!data.tables || !Array.isArray(data.tables)) {
+      toast({
+        title: "Invalid Data",
+        description: "The diagram data must contain a valid 'tables' array.",
+        variant: "destructive",
+      });
+      return false;
+    }
 
-    // Optional: Add more specific validation
+    // Validate each table structure
     const isValidTable = (table: any) => {
       return (
         table &&
         typeof table === "object" &&
         typeof table.name === "string" &&
+        table.name.trim() !== "" &&
         Array.isArray(table.columns)
       );
     };
 
-    // Validate each table
-    if (!data.tables.every(isValidTable)) return false;
+    // Check if all tables are valid
+    if (!data.tables.every(isValidTable)) {
+      toast({
+        title: "Invalid Tables",
+        description: "One or more tables have an invalid structure.",
+        variant: "destructive",
+      });
+      return false;
+    }
 
-    // Validate relationships array (optional, adjust based on your specific needs)
-    if (data.relationships && !Array.isArray(data.relationships)) return false;
+    // Optional: Validate relationships if present
+    if (data.relationships && !Array.isArray(data.relationships)) {
+      toast({
+        title: "Invalid Relationships",
+        description: "The relationships must be an array.",
+        variant: "destructive",
+      });
+      return false;
+    }
 
     return true;
+  };
+
+  const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setSelectedFile(files[0]);
+    }
+  };
+
+  const handleImport = () => {
+    if (!selectedFile) {
+      toast({
+        title: "No File Selected",
+        description: "Please select a JSON file to import.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const jsonData = await JSON.parse(event.target?.result as string);
+
+        if (isValidDiagramData(jsonData)) {
+          console.log(jsonData);
+          await loadDiagram(jsonData);
+
+          // Show success toast
+          toast({
+            title: "Import Successful",
+            description: "Your diagram has been imported successfully.",
+            variant: "default",
+          });
+
+          // Close the modal
+          setIsImportModalOpen(false);
+          // Reset selected file
+          setSelectedFile(null);
+        }
+      } catch (error) {
+        toast({
+          title: "Import Error",
+          description:
+            "Failed to parse the JSON file. Please check the data structure.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    reader.readAsText(selectedFile);
   };
 
   const handleExport = () => {
@@ -144,6 +148,13 @@ const Toolbar = ({ toggleSidebar }: ToolbarProps) => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+
+    // Show export success toast
+    toast({
+      title: "Export Successful",
+      description: "Your diagram has been exported as JSON.",
+      variant: "default",
+    });
   };
 
   return (
@@ -238,31 +249,12 @@ const Toolbar = ({ toggleSidebar }: ToolbarProps) => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={saveDiagram}
-                className="gap-1.5"
+                onClick={() => setIsImportModalOpen(true)}
+                className="gap-1.5 hidden"
               >
-                <Save size={18} />
-                <span className="hidden md:inline">Save</span>
+                <Upload size={18} />
+                <span className="hidden md:inline">Import</span>
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>Save Diagram</TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Label htmlFor="import-file" className="cursor-pointer">
-                <Input
-                  id="import-file"
-                  type="file"
-                  className="hidden"
-                  onChange={handleImport}
-                  accept=".json"
-                />
-                <Button variant="ghost" size="sm" className="gap-1.5 hidden">
-                  <Upload size={18} />
-                  <span className="hidden md:inline">Import</span>
-                </Button>
-              </Label>
             </TooltipTrigger>
             <TooltipContent>Import JSON</TooltipContent>
           </Tooltip>
@@ -288,6 +280,49 @@ const Toolbar = ({ toggleSidebar }: ToolbarProps) => {
             <ModeToggle />
           </div>
         </div>
+
+        {/* Import Modal */}
+        <Dialog open={isImportModalOpen} onOpenChange={setIsImportModalOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Import Diagram</DialogTitle>
+              <DialogDescription>
+                Upload a JSON file containing your database diagram.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid w-full max-w-sm items-center gap-3">
+              <Label htmlFor="import-file">JSON File</Label>
+              <Input
+                id="import-file"
+                type="file"
+                accept=".json"
+                onChange={handleFileSelect}
+              />
+              {selectedFile && (
+                <p className="text-sm text-muted-foreground">
+                  Selected file: {selectedFile.name}
+                </p>
+              )}
+            </div>
+
+            <div className="flex justify-end space-x-2">
+              <Button
+                variant="outline"
+                onClick={() => setIsImportModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="hidden"
+                onClick={handleImport}
+                disabled={!selectedFile}
+              >
+                Import
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </TooltipProvider>
   );

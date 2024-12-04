@@ -68,6 +68,8 @@ An tool for creating database diagrams using **Next.js**, **Tailwind CSS**, **Re
   - Switch between List View and Diagram View with a button.
 - **Dark/Light Mode**:
   - Toggle between themes for better usability.
+  - **Export Json**:
+  - Export data as json.
 
 ### Other Features
 
