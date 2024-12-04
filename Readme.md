@@ -14,7 +14,7 @@
 
 - **GitHub**: [https://github.com/sabeen2](https://github.com/sabeen2)
 - **Portfolio**: [https://www.psabin.com.np/](https://www.psabin.com.np/)
-- **Resume**: [https://www.psabin.com.np/](https://www.psabin.com.np/)
+- **Resume**: [https://drive.google.com/file/d/14P5XW6zSUJf3hCthoYe2GSLFc7lk71Uf/view](https://drive.google.com/file/d/14P5XW6zSUJf3hCthoYe2GSLFc7lk71Uf/view)
 - **LinkedIn**: [https://www.linkedin.com/in/sabin-pandey/](https://www.linkedin.com/in/sabin-pandey/)
 
 ---
@@ -75,7 +75,7 @@ An tool for creating database diagrams using **Next.js**, **Tailwind CSS**, **Re
 
 - Validation to prevent duplicate table and column names.
 - Error, alert, and success message handling.
-- Export diagrams as JSON and import existing JSON files.
+- Export diagrams as JSON .
 - Optimized for performance with `useCallback` and `useMemo`.
 - Fully mobile-responsive design with a clean UI.
 
