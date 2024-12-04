@@ -1,10 +1,33 @@
 # Frontend Projects by Sabin Pandey
 
+## Personal Details
+
+- **Name**: Sabin Pandey
+- **Email**: [sabeenpandey2@gmail.com](mailto:sabeenpandey2@gmail.com)
+- **Phone**: +977 9813528464
+- **Role Applied**: Frontend Developer
+- **Address**: Tarkeshwor, Kathmandu
+
+---
+
+## Additional Links
+
+- **GitHub**: [https://github.com/sabeen2](https://github.com/sabeen2)
+- **Portfolio**: [https://www.psabin.com.np/](https://www.psabin.com.np/)
+- **Resume**: [https://www.psabin.com.np/](https://www.psabin.com.np/)
+- **LinkedIn**: [https://www.linkedin.com/in/sabin-pandey/](https://www.linkedin.com/in/sabin-pandey/)
+
+---
+
+## Timelog
+
+Find details in the `Timelog.md` file. [Timelog Link ](https://github.com/sabeen2/startercode/blob/sabin_pandey_frontend/Timelog.md)
+
 ## 1. Honest Value (Figma Implementation)
 
 ### Deployment Link
 
-[Honest Value](https://honest-value-sabin.vercel.app)
+[https://honest-value-sabin.vercel.app](https://honest-value-sabin.vercel.app)
 
 ### Overview
 
@@ -29,7 +52,7 @@ This project is a pixel-perfect implementation of a Figma design using **TypeScr
 
 An tool for creating database diagrams using **Next.js**, **Tailwind CSS**, **React Flow**, and **ShadCN UI**.
 
-[Diagrammer Pro](https://diagrammer-pro-sabin.vercel.app)
+[https://diagrammer-pro-sabin.vercel.app](https://diagrammer-pro-sabin.vercel.app)
 
 ### Core Features
 
