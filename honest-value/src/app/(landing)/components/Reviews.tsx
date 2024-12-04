@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import staticDataRaw from "../../../statics/staticData.json";
 import { ITestimonial, StaticData } from "@/interfaces/static-data.interface";
-import AnimatedWrapper from "@/app/components/AnimatedWrapper";
+import AnimatedWrapper from "../../../reusables/AnimatedWrapper";
 
 const staticData: StaticData = staticDataRaw as StaticData;
 const testimonials: ITestimonial[] = staticData?.testimonials || [];

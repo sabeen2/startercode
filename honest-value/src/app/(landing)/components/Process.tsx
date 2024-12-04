@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import SubItemTabs from "./SubItem";
 import staticDataRaw from "../../../statics/staticData.json";
 import { StaticData } from "@/interfaces/static-data.interface";
-import AnimatedWrapper from "@/app/components/AnimatedWrapper";
+import AnimatedWrapper from "../../../reusables/AnimatedWrapper";
 import { truncateByLetters, truncateByWords } from "@/utils/string.utils";
 
 const staticData: StaticData = staticDataRaw as StaticData;

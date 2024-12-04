@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import staticDataRaw from "../../../statics/staticData.json";
 import { StaticData } from "@/interfaces/static-data.interface";
 import { motion } from "framer-motion";
-import AnimatedWrapper from "@/app/components/AnimatedWrapper";
+import AnimatedWrapper from "../../../reusables/AnimatedWrapper";
 
 const staticData: StaticData = staticDataRaw as StaticData;
 

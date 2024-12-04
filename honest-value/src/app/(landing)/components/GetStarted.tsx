@@ -1,4 +1,4 @@
-import AnimatedWrapper from "@/app/components/AnimatedWrapper";
+import AnimatedWrapper from "../../../reusables/AnimatedWrapper";
 import React from "react";
 
 const GetStarted: React.FC = () => {
